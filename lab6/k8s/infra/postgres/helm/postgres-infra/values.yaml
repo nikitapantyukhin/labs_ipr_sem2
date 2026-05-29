@@ -1,0 +1,25 @@
+image:
+  repository: postgres
+  tag: 17.5-alpine
+  pullPolicy: IfNotPresent
+
+database:
+  name: sport_platform
+  user: sport
+  password: sport_password
+
+service:
+  name: postgres
+  port: 5432
+
+persistence:
+  size: 1Gi
+  storageClassName: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

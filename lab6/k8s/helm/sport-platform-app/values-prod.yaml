@@ -1,0 +1,44 @@
+backend:
+  replicaCount: 2
+
+frontend:
+  replicaCount: 2
+  service:
+    type: ClusterIP
+    nodePort: null
+
+database:
+  host: postgres-0.postgres.sport-platform-infra-prod.svc.cluster.local
+  port: "5432"
+  name: sport_platform
+  user: sport
+  password: change_me_with_external_secret
+
+minio:
+  accessKey: change_me_minio_access_key
+  secretKey: change_me_minio_secret_key
+
+auth:
+  accessSecret: change_me_access_secret
+  refreshSecret: change_me_refresh_secret
+  authSecret: change_me_auth_secret_32_chars_min
+
+app:
+  demoSeed: "false"
+  corsAllowedOrigins: https://sport.example.com,https://api.sport.example.com
+  authUrl: https://sport.example.com
+  nextAuthUrl: https://sport.example.com
+  backendApiUrl: http://backend-service:8080
+  nextPublicApiUrl: https://api.sport.example.com
+
+ingress:
+  frontendHost: sport.example.com
+  backendHost: api.sport.example.com
+
+hpa:
+  backend:
+    minReplicas: 2
+    maxReplicas: 6
+  frontend:
+    minReplicas: 2
+    maxReplicas: 6

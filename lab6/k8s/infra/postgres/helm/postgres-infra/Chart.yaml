@@ -1,0 +1,6 @@
+apiVersion: v2
+name: postgres-infra
+description: PostgreSQL infrastructure chart for sport-platform lab 6
+type: application
+version: 0.1.0
+appVersion: "17.5"

@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+    paths-ignore:
+      - .github
+      - .devcontainer
+      - .gitignore
+      - .idea
+      - ../../docker-compose.yml
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go setup
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.24
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.6
