@@ -1,0 +1,67 @@
+services:
+  backend:
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://tempo:4318}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-sport-platform-backend}
+      DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT:-compose}
+    depends_on:
+      tempo:
+        condition: service_started
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-remote-write-receiver
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+    networks:
+      - shared
+
+  tempo:
+    image: grafana/tempo:2.6.1
+    command:
+      - -config.file=/etc/tempo/tempo.yml
+    volumes:
+      - ./observability/tempo/tempo.yml:/etc/tempo/tempo.yml:ro
+      - tempo_data:/tmp/tempo
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - shared
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_DEFAULT_THEME: light
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      prometheus:
+        condition: service_started
+      tempo:
+        condition: service_started
+    networks:
+      - shared
+
+volumes:
+  prometheus_data:
+  tempo_data:
+  grafana_data:
