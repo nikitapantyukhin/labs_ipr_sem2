@@ -1,0 +1,86 @@
+backend:
+  replicaCount: 2
+  image:
+    repository: sport-platform-backend
+    tag: 1.0.0
+    pullPolicy: IfNotPresent
+  waitForPostgresImage: postgres:17.5-alpine
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: sport-platform-frontend
+    tag: 1.0.0
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    nodePort: null
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+database:
+  host: postgres-0.postgres.sport-platform-infra.svc.cluster.local
+  port: "5432"
+  name: sport_platform
+  user: sport
+  password: sport_password
+
+minio:
+  endpoint: minio-service:9000
+  useSsl: "false"
+  bucketName: clubs
+  accessKey: minioadmin
+  secretKey: minioadmin
+
+auth:
+  issuer: sport-platform
+  accessSecret: dev_access_secret_change_me
+  refreshSecret: dev_refresh_secret_change_me
+  authSecret: dev_auth_secret_change_me_32_chars
+  accessTtl: 24h
+  refreshTtl: 168h
+
+security:
+  saltSize: "16"
+  iterations: "1"
+  memory: "65536"
+  threads: "4"
+  keyLength: "32"
+
+app:
+  demoSeed: "true"
+  corsAllowedOrigins: http://sport.localhost,http://localhost:30080,http://localhost:3000,http://127.0.0.1:3000
+  authUrl: http://sport.localhost
+  nextAuthUrl: http://sport.localhost
+  backendApiUrl: http://backend-service:8080
+  nextPublicApiUrl: http://api.sport.localhost
+
+ingress:
+  enabled: true
+  className: nginx
+  proxyBodySize: 20m
+  frontendHost: sport.localhost
+  backendHost: api.sport.localhost
+
+hpa:
+  enabled: true
+  backend:
+    minReplicas: 2
+    maxReplicas: 5
+    averageUtilization: 60
+  frontend:
+    minReplicas: 2
+    maxReplicas: 5
+    averageUtilization: 60

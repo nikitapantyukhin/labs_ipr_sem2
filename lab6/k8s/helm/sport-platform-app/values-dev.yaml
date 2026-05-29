@@ -1,0 +1,31 @@
+backend:
+  replicaCount: 1
+
+frontend:
+  replicaCount: 1
+  service:
+    type: NodePort
+    nodePort: 30080
+
+database:
+  host: postgres-0.postgres.sport-platform-infra.svc.cluster.local
+  port: "5432"
+  name: sport_platform
+  user: sport
+  password: sport_password
+
+app:
+  demoSeed: "true"
+  corsAllowedOrigins: http://sport.localhost,http://localhost:30080,http://localhost:3000,http://127.0.0.1:3000
+  authUrl: http://sport.localhost
+  nextAuthUrl: http://sport.localhost
+  backendApiUrl: http://backend-service:8080
+  nextPublicApiUrl: http://api.sport.localhost
+
+hpa:
+  backend:
+    minReplicas: 1
+    maxReplicas: 3
+  frontend:
+    minReplicas: 1
+    maxReplicas: 3

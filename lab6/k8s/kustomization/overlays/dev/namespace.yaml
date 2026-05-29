@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sport-platform
+  labels:
+    app.kubernetes.io/name: sport-platform
+    environment: dev
