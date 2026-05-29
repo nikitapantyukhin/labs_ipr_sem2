@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sport-platform-config
+  namespace: sport-platform
+data:
+  APP_PORT: "8080"
+  HOST: postgres-service
+  PORT: "5432"
+  DB_NAME: sport_platform
+  MINIO_ENDPOINT: minio-service:9000
+  MINIO_USE_SSL: "false"
+  MINIO_BUCKET_NAME: clubs
+  ISSUER: sport-platform
+  EXPIRE_TIMEOUT_ACCESS: 24h
+  EXPIRE_TIMEOUT_REFRESH: 168h
+  SALT_SIZE: "16"
+  ITERATIONS: "1"
+  MEMORY: "65536"
+  THREADS: "4"
+  KEY_LENGTH: "32"
+  DEMO_SEED: "true"
+  CORS_ALLOWED_ORIGINS: http://sport.localhost,http://localhost:30080,http://localhost:3000,http://127.0.0.1:3000
+  AUTH_URL: http://sport.localhost
+  NEXTAUTH_URL: http://sport.localhost
+  BACKEND_API_URL: http://backend-service:8080
+  NEXT_PUBLIC_API_URL: http://api.sport.localhost
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo-service:4318
+  OTEL_SERVICE_NAME: sport-platform-backend
+  DEPLOYMENT_ENVIRONMENT: kubernetes
